@@ -1,0 +1,84 @@
+:root {
+    --primary: #00d2ff;
+    --accent: #3a47d5;
+    --dark-bg: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+body { 
+    font-family: 'Segoe UI', Roboto, sans-serif; 
+    background-color: var(--dark-bg); 
+    color: var(--text-main); 
+    margin: 0; 
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    position: sticky;
+    top: 0;
+}
+
+.logo { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+.logo span { color: var(--primary); }
+
+.tabs .tab-btn {
+    background: none; border: none; color: #94a3b8;
+    padding: 8px 16px; cursor: pointer; font-weight: 600;
+    transition: 0.3s;
+}
+
+.tabs .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+/* Containers */
+.container { max-width: 900px; margin: 2rem auto; padding: 0 20px; }
+.tab-content { display: none; animation: slideUp 0.4s ease-out; }
+.tab-content.active { display: block; }
+
+/* Chat Estilizado */
+.chat-area {
+    background: var(--card-bg); height: 400px; overflow-y: auto;
+    border-radius: 12px; padding: 20px; border: 1px solid #334155;
+    margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px;
+}
+
+.msg { background: #334155; padding: 10px 15px; border-radius: 15px; width: fit-content; max-width: 80% ;}
+.msg.system { background: rgba(0, 210, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); font-style: italic; align-self: center; }
+
+.chat-input-group { display: flex; gap: 10px; }
+.chat-input-group input { 
+    flex: 1; background: #334155; border: 1px solid #475569; 
+    padding: 12px; border-radius: 8px; color: white;
+}
+
+/* Botões Modernos */
+.btn-send, .btn-publish, .btn-vote {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white; border: none; padding: 10px 20px;
+    border-radius: 8px; cursor: pointer; font-weight: bold; transition: transform 0.2s;
+}
+
+.btn-send:hover, .btn-publish:hover { transform: translateY(-2px); opacity: 0.9; }
+
+/* Cards de Lei */
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 20px; }
+.card {
+    background: var(--card-bg); padding: 20px; border-radius: 12px;
+    border: 1px solid #334155; border-left: 6px solid var(--primary);
+}
+
+.vote-actions { display: flex; gap: 10px; margin-top: 15px; }
+.btn-approve { background: var(--success); }
+.btn-reject { background: var(--danger); }
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
