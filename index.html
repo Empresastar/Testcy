@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybercracy P2P | Oficial</title>
+    <title>Cybercracy P2P | Sistema Legislativo</title>
     <style>
-        /* CSS INTEGRADO - EVITA ERRO 404 */
         :root {
             --primary: #00d2ff;
-            --accent: #3a47d5;
             --dark-bg: #0f172a;
             --card-bg: #1e293b;
             --text: #f8fafc;
@@ -16,55 +14,42 @@
             --danger: #ef4444;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark-bg); color: var(--text); margin: 0; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark-bg); color: var(--text); margin: 0; }
         
+        /* Interface e Navegação */
         .navbar { 
             background: var(--card-bg); padding: 1rem 5%; display: flex; 
             justify-content: space-between; align-items: center; 
             border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 100;
         }
-
         .logo { font-size: 1.5rem; font-weight: bold; }
         .logo span { color: var(--primary); }
-
         .tabs button { 
             background: none; border: none; color: #94a3b8; 
-            padding: 10px 15px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            padding: 10px 15px; cursor: pointer; font-weight: bold; font-size: 1rem;
         }
-
         .tabs button.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
         .container { max-width: 800px; margin: 2rem auto; padding: 0 20px; }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* CHAT STYLE */
+        /* Estilo do Chat */
         .chat-area { 
-            background: #000; height: 350px; overflow-y: auto; 
+            background: #000; height: 300px; overflow-y: auto; 
             border-radius: 10px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px;
+            display: flex; flex-direction: column; gap: 10px;
         }
-        .msg { background: #334155; padding: 10px; border-radius: 8px; margin-bottom: 10px; width: fit-content; max-width: 85%; }
-        .msg.system { background: rgba(0, 210, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); align-self: center; width: 100%; text-align: center; }
+        .msg { background: #334155; padding: 10px; border-radius: 8px; width: fit-content; max-width: 80%; }
+        .msg.system { background: rgba(0, 210, 255, 0.1); color: var(--primary); align-self: center; width: 90%; text-align: center; }
 
         .input-group { display: flex; gap: 10px; }
         input, textarea { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; }
-        textarea { height: 150px; width: 100%; box-sizing: border-box; }
 
-        /* BUTTONS */
-        .btn { 
-            background: var(--primary); color: #000; border: none; 
-            padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; 
-        }
-        .btn:hover { opacity: 0.8; transform: translateY(-1px); }
-        .btn-vote { padding: 8px 15px; margin-right: 5px; font-size: 0.8rem; }
-
-        /* CARDS */
-        .card { 
-            background: var(--card-bg); padding: 20px; border-radius: 12px; 
-            margin-bottom: 20px; border-left: 5px solid var(--primary); 
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Botões e Cards */
+        .btn { background: var(--primary); color: #000; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 5px solid var(--primary); }
+        .vote-btns { display: flex; gap: 10px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -81,22 +66,22 @@
 
     <div class="container">
         <section id="chat" class="tab-content active">
-            <h2>🗨️ Debate Legislativo</h2>
+            <h2>🗨️ Chat Público</h2>
             <div id="chat-box" class="chat-area">
-                <div class="msg system">Sistema: Bem-vindo à rede Cybercracy. Proponha e debata.</div>
+                <div class="msg system">Conectado ao rito de debates filosóficos.</div>
             </div>
             <div class="input-group">
-                <input type="text" id="chat-input" placeholder="Sua ideia...">
+                <input type="text" id="chat-input" placeholder="Sua mensagem...">
                 <button class="btn" onclick="sendMessage()">Enviar</button>
             </div>
         </section>
 
         <section id="editor" class="tab-content">
-            <h2>📝 Criar Projeto de Lei (PL)</h2>
+            <h2>📝 Criar Projeto de Lei</h2>
             <div class="card">
-                <input type="text" id="pl-title" placeholder="Título da PL..." style="margin-bottom: 10px; width: 100%; box-sizing: border-box;">
-                <textarea id="pl-text" placeholder="Escreva os artigos da lei aqui..."></textarea>
-                <button class="btn" onclick="publishPL()" style="margin-top: 10px; width: 100%;">Publicar na Urna</button>
+                <input type="text" id="pl-title" placeholder="Título da PL" style="width: 100%; margin-bottom: 10px; box-sizing: border-box;">
+                <textarea id="pl-text" placeholder="Texto da lei..." style="width: 100%; height: 100px; box-sizing: border-box;"></textarea>
+                <button class="btn" onclick="publishPL()" style="width: 100%; margin-top: 10px;">Publicar na Urna</button>
             </div>
         </section>
 
@@ -112,10 +97,10 @@
     </div>
 
     <script>
-        /* JAVASCRIPT INTEGRADO - TUDO FUNCIONANDO */
-        let database = JSON.parse(localStorage.getItem('cyber_db')) || [];
+        // Lógica do Sistema
+        let db = JSON.parse(localStorage.getItem('cyber_p2p_db')) || [];
 
-        // TROCAR ABAS
+        // FUNÇÃO DAS ABAS (Resolve o ReferenceError)
         function openTab(evt, tabName) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(c => c.classList.remove('active'));
@@ -130,7 +115,7 @@
             if(tabName === 'livro') renderLivro();
         }
 
-        // CHAT
+        // FUNÇÃO ENVIAR MENSAGEM
         function sendMessage() {
             const input = document.getElementById('chat-input');
             const box = document.getElementById('chat-box');
@@ -144,75 +129,50 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        // PUBLICAR PL
+        // FUNÇÃO PUBLICAR PL
         function publishPL() {
             const title = document.getElementById('pl-title').value;
             const text = document.getElementById('pl-text').value;
-            if(!title || !text) return alert("Preencha o título e o texto!");
+            if(!title || !text) return alert("Preencha tudo!");
 
-            const newPL = { id: Date.now(), title, text, up: 0, down: 0, status: 'voting' };
-            database.push(newPL);
-            save();
-            alert("Projeto enviado para a Urna!");
+            db.push({ id: Date.now(), title, text, up: 0, down: 0, status: 'voting' });
+            localStorage.setItem('cyber_p2p_db', JSON.stringify(db));
+            alert("Publicado!");
             document.getElementById('pl-title').value = "";
             document.getElementById('pl-text').value = "";
         }
 
-        // RENDERIZAR URNA
         function renderUrna() {
             const list = document.getElementById('urna-list');
             list.innerHTML = '';
-            const voting = database.filter(p => p.status === 'voting');
-
-            voting.forEach(p => {
+            db.filter(p => p.status === 'voting').forEach(p => {
                 list.innerHTML += `
                     <div class="card">
                         <h3>${p.title}</h3>
                         <p>${p.text}</p>
-                        <button class="btn btn-vote" style="background:#10b981" onclick="vote(${p.id}, 'up')">Aprovar (${p.up})</button>
-                        <button class="btn btn-vote" style="background:#ef4444" onclick="vote(${p.id}, 'down')">Recusar (${p.down})</button>
-                        <button class="btn btn-vote" style="background:#64748b" onclick="vote(${p.id}, 'del')">Derrubar</button>
+                        <div class="vote-btns">
+                            <button class="btn" style="background:var(--success)" onclick="vote(${p.id}, 'up')">Aprovar (${p.up})</button>
+                            <button class="btn" style="background:var(--danger)" onclick="vote(${p.id}, 'down')">Recusar (${p.down})</button>
+                        </div>
                     </div>`;
             });
         }
 
-        // VOTAR
         function vote(id, type) {
-            const p = database.find(x => x.id === id);
-            if(type === 'up') p.up++;
-            if(type === 'down') p.down++;
-            if(type === 'del') {
-                if(confirm("Derrubar este projeto?")) {
-                    database = database.filter(x => x.id !== id);
-                }
-            }
-
-            // Regra: 3 votos de saldo para virar Lei
-            if(p && p.up >= 3) {
-                p.status = 'approved';
-                alert("A Lei foi aprovada!");
-            }
-
-            save();
+            const p = db.find(x => x.id === id);
+            type === 'up' ? p.up++ : p.down++;
+            if(p.up >= 3) p.status = 'approved';
+            localStorage.setItem('cyber_p2p_db', JSON.stringify(db));
             renderUrna();
         }
 
-        // RENDERIZAR LIVRO
         function renderLivro() {
             const list = document.getElementById('livro-list');
-            list.innerHTML = '<div class="card" style="border-left-color: #fbbf24"><h3>📜 LP-01: Protocolo Base</h3><p>O Cybercracy funciona via consenso digital P2P.</p></div>';
-            
-            const approved = database.filter(p => p.status === 'approved');
-            approved.forEach(p => {
-                list.innerHTML += `
-                    <div class="card" style="border-left-color: #fbbf24">
-                        <h3>📜 ${p.title}</h3>
-                        <p>${p.text}</p>
-                    </div>`;
+            list.innerHTML = '<div class="card"><h3>📜 LP-01: Protocolo de Uso</h3><p>As funções do software são regidas por este código.</p></div>';
+            db.filter(p => p.status === 'approved').forEach(p => {
+                list.innerHTML += `<div class="card"><h3>📜 ${p.title}</h3><p>${p.text}</p></div>`;
             });
         }
-
-        function save() { localStorage.setItem('cyber_db', JSON.stringify(database)); }
     </script>
 </body>
 </html>
