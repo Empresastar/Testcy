@@ -1,23 +1,39 @@
 :root {
-    --primary: #00a8ff;
-    --dark: #1e272e;
-    --light: #f5f6fa;
-    --success: #4cd137;
-    --danger: #e84118;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --bg: #f4f7f6;
+    --card: #ffffff;
+    --text: #333;
+    --success: #28a745;
+    --danger: #dc3545;
 }
 
-body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; }
-.navbar { background: var(--dark); color: white; padding: 1rem; text-align: center; }
-.tabs button { background: transparent; border: 1px solid var(--primary); color: white; cursor: pointer; padding: 10px 20px; margin: 5px; border-radius: 5px; }
-.tabs button:hover { background: var(--primary); }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+.navbar { background: #1a1a1a; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.logo { font-weight: bold; font-size: 1.5rem; letter-spacing: 1px; }
+.logo span { color: var(--primary); }
 
-.tab-content { padding: 20px; max-width: 800px; margin: auto; }
-.display-area { background: white; height: 300px; border: 1px solid #ddd; overflow-y: auto; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+.tabs .tab-btn { background: none; border: none; color: #ccc; padding: 10px 15px; cursor: pointer; transition: 0.3s; font-size: 1rem; }
+.tabs .tab-btn.active { color: white; border-bottom: 2px solid var(--primary); }
 
-input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-textarea { height: 150px; }
+.container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.5s; }
 
-.card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
-.btn-vote { margin-right: 5px; padding: 5px 10px; cursor: pointer; border: none; border-radius: 3px; }
-.btn-approve { background: var(--success); color: white; }
-.btn-reject { background: var(--danger); color: white; }
+.display-area { background: var(--card); border: 1px solid #ddd; height: 350px; overflow-y: auto; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+.form-card { background: var(--card); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+textarea { height: 200px; resize: vertical; }
+
+.btn-main { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+.card { background: var(--card); padding: 20px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.card h3 { margin-top: 0; }
+.vote-btns { display: flex; gap: 10px; margin-top: 15px; }
+.btn-v { border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; color: white; }
+
+.protocol-box { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #333; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
