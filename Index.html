@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybercracy P2P</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>CYBERCRACY P2P</h1>
+        <div class="tabs">
+            <button onclick="openTab('chat')">Chat</button>
+            <button onclick="openTab('editor')">Editor PL</button>
+            <button onclick="openTab('urna')">Urna</button>
+            <button onclick="openTab('livro')">Livro da Lei</button>
+        </div>
+    </nav>
+
+    <section id="chat" class="tab-content">
+        <h2>Chat Público</h2>
+        <div id="chat-box" class="display-area"></div>
+        <div class="input-group">
+            <input type="text" id="chat-input" placeholder="Debata sua ideia...">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </section>
+
+    <section id="editor" class="tab-content" style="display:none">
+        <h2>Criador de Textos PL</h2>
+        <input type="text" id="pl-title" placeholder="Título do Projeto de Lei">
+        <textarea id="pl-text" placeholder="Escreva o corpo da lei aqui..."></textarea>
+        <button onclick="publishPL()">Publicar na Urna Livre</button>
+    </section>
+
+    <section id="urna" class="tab-content" style="display:none">
+        <h2>Urna de Voto Livre</h2>
+        <div id="urna-list" class="card-container"></div>
+    </section>
+
+    <section id="livro" class="tab-content" style="display:none">
+        <h2>Livro da Lei</h2>
+        <div class="protocol-section">
+            <h3>Leis Protocolares (LP)</h3>
+            <p><strong>LP-01:</strong> O sistema é regido pelo consenso P2P.</p>
+        </div>
+        <hr>
+        <div id="livro-list" class="card-container"></div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+                 </html>
+                 
