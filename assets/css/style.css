@@ -1,84 +1,33 @@
 :root {
     --primary: #00d2ff;
-    --accent: #3a47d5;
     --dark-bg: #0f172a;
     --card-bg: #1e293b;
-    --text-main: #f8fafc;
-    --success: #10b981;
-    --danger: #ef4444;
+    --text: #f8fafc;
 }
 
-body { 
-    font-family: 'Segoe UI', Roboto, sans-serif; 
-    background-color: var(--dark-bg); 
-    color: var(--text-main); 
-    margin: 0; 
-    line-height: 1.6;
-}
+body { font-family: sans-serif; background: var(--dark-bg); color: var(--text); margin: 0; }
 
-/* Navbar */
-.navbar {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(10px);
-    padding: 1rem 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #334155;
-    position: sticky;
-    top: 0;
-}
+.navbar { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
+.logo span { color: var(--primary); font-weight: bold; }
 
-.logo { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
-.logo span { color: var(--primary); }
+.tab-btn { background: none; border: none; color: #94a3b8; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+.tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-.tabs .tab-btn {
-    background: none; border: none; color: #94a3b8;
-    padding: 8px 16px; cursor: pointer; font-weight: 600;
-    transition: 0.3s;
-}
-
-.tabs .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-
-/* Containers */
-.container { max-width: 900px; margin: 2rem auto; padding: 0 20px; }
-.tab-content { display: none; animation: slideUp 0.4s ease-out; }
+.container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
+.tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* Chat Estilizado */
-.chat-area {
-    background: var(--card-bg); height: 400px; overflow-y: auto;
-    border-radius: 12px; padding: 20px; border: 1px solid #334155;
-    margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px;
-}
-
-.msg { background: #334155; padding: 10px 15px; border-radius: 15px; width: fit-content; max-width: 80% ;}
-.msg.system { background: rgba(0, 210, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); font-style: italic; align-self: center; }
+/* Estilo do Chat */
+.chat-area { background: #000; height: 300px; overflow-y: auto; border-radius: 8px; padding: 15px; margin-bottom: 10px; border: 1px solid #334155; }
+.msg { margin-bottom: 8px; padding: 8px; background: #334155; border-radius: 5px; width: fit-content; }
 
 .chat-input-group { display: flex; gap: 10px; }
-.chat-input-group input { 
-    flex: 1; background: #334155; border: 1px solid #475569; 
-    padding: 12px; border-radius: 8px; color: white;
-}
+.chat-input-group input { flex: 1; padding: 10px; border-radius: 5px; border: none; }
 
-/* Botões Modernos */
-.btn-send, .btn-publish, .btn-vote {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; border: none; padding: 10px 20px;
-    border-radius: 8px; cursor: pointer; font-weight: bold; transition: transform 0.2s;
-}
+/* Botões */
+.btn-send, .btn-publish, .btn-vote { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn-vote.approve { background: #10b981; margin-right: 5px; }
+.btn-vote.reject { background: #ef4444; }
 
-.btn-send:hover, .btn-publish:hover { transform: translateY(-2px); opacity: 0.9; }
-
-/* Cards de Lei */
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 20px; }
-.card {
-    background: var(--card-bg); padding: 20px; border-radius: 12px;
-    border: 1px solid #334155; border-left: 6px solid var(--primary);
-}
-
-.vote-actions { display: flex; gap: 10px; margin-top: 15px; }
-.btn-approve { background: var(--success); }
-.btn-reject { background: var(--danger); }
-
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+/* Cards */
+.card { background: var(--card-bg); padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
