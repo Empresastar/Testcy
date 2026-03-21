@@ -3,230 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybercracy P2P | Light & Fast</title>
+    <title>Cybercracy | Governança Colaborativa</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
+        /* Design Humanizado: Foco em Leitura e Conforto */
         :root {
-            --primary: #00d2ff;
-            --accent: #3a47d5;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --glass: rgba(30, 41, 59, 0.7);
+            --bg: #12141c;
+            --surface: #1e202a;
+            --primary: #5c7cfa;
+            --text: #eceef2;
+            --text-dim: #9499b0;
+            --border: #2d313e;
+            --success: #2ecc71;
+            --error: #e74c3c;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            /* Gradiente estático é muito mais leve que animado */
-            background-image: radial-gradient(circle at 50% -20%, #1e40af, #0f172a 80%);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.5;
-        }
-
-        /* Navbar fixa e leve */
-        .navbar {
+        /* Navegação */
+        .nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 5%; background: rgba(15, 23, 42, 0.9);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky; top: 0; z-index: 100;
+            padding: 1rem 10%; background: var(--surface); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 10;
         }
-
-        .logo { font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .logo span { color: var(--primary); }
-
-        .tabs button {
-            background: none; border: none; color: #94a3b8;
-            padding: 10px 15px; cursor: pointer; font-weight: 600;
-            transition: color 0.2s;
+        .nav h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
+        .nav-tabs button {
+            background: none; border: none; color: var(--text-dim); padding: 0.8rem 1rem;
+            cursor: pointer; font-weight: 500; transition: 0.2s;
         }
+        .nav-tabs button.active { color: var(--text); border-bottom: 2px solid var(--primary); }
 
-        .tabs button.active { color: var(--primary); }
+        /* Conteúdo */
+        .wrapper { max-width: 750px; margin: 2rem auto; padding: 0 1.5rem; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Container centralizado */
-        .container { max-width: 800px; margin: 2rem auto; padding: 0 20px; }
+        /* Chat Estilo Comunidade */
+        .chat-container { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        .chat-messages { height: 400px; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 12px; }
+        .msg { font-size: 0.95rem; max-width: 85%; }
+        .msg-user { color: var(--primary); font-weight: 600; font-size: 0.8rem; margin-bottom: 2px; display: block; }
+        .msg-text { background: #2d313e; padding: 10px 14px; border-radius: 4px 14px 14px 14px; width: fit-content; }
+        .msg.me { align-self: flex-end; }
+        .msg.me .msg-text { background: var(--primary); color: white; border-radius: 14px 14px 4px 14px; }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: simpleFade 0.3s ease-in; }
-
-        @keyframes simpleFade { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Cards estilo Moderno (sem blur pesado para não travar) */
-        .card {
-            background: var(--card); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Chat */
-        .chat-box {
-            height: 300px; overflow-y: auto; background: rgba(0,0,0,0.2);
-            border-radius: 8px; padding: 15px; margin-bottom: 15px;
-            display: flex; flex-direction: column; gap: 8px;
-        }
-        .bubble { background: #334155; padding: 8px 12px; border-radius: 12px; width: fit-content; max-width: 85%; font-size: 0.95rem; }
-        .bubble.me { align-self: flex-end; background: var(--accent); color: white; }
-
-        /* Status P2P */
-        .status-bar { font-size: 0.75rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 5px; }
-        .pulse { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        /* Inputs e Botões */
+        .chat-input { display: flex; padding: 1rem; background: #181a23; gap: 10px; }
         input, textarea {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155;
-            background: #0f172a; color: white; margin-bottom: 10px;
+            flex: 1; background: #2d313e; border: 1px solid transparent; 
+            padding: 12px 16px; border-radius: 8px; color: white; font-size: 1rem;
         }
-        .btn {
-            background: var(--primary); color: #0f172a; border: none;
-            padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
-            width: 100%; transition: opacity 0.2s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-vote { width: auto; padding: 6px 15px; margin-right: 10px; }
+        input:focus { outline: none; border-color: var(--primary); }
 
+        /* Cards Legislativos */
+        .card { background: var(--surface); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; }
+        .card h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .card p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 1rem; }
+
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 10px 20px;
+            border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        .btn:hover { filter: brightness(1.1); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Conexão P2P */
+        .p2p-badge { font-size: 0.75rem; background: #181a23; padding: 4px 12px; border-radius: 20px; margin-bottom: 1rem; display: inline-block; border: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo">CYBER<span>CRACY</span></div>
-        <nav class="tabs">
-            <button class="t-link active" onclick="tab(event, 'chat')">Chat</button>
-            <button class="t-link" onclick="tab(event, 'editor')">Editor</button>
-            <button class="t-link" onclick="tab(event, 'urna')">Urna</button>
-            <button class="t-link" onclick="tab(event, 'livro')">Livro</button>
-        </nav>
-    </header>
+<nav class="nav">
+    <h1>CYBERCRACY</h1>
+    <div class="nav-tabs">
+        <button class="tab-link active" onclick="showTab(event, 'chat')">Debate</button>
+        <button class="tab-link" onclick="showTab(event, 'editor')">Propor</button>
+        <button class="tab-link" onclick="showTab(event, 'urna')">Urna</button>
+        <button class="tab-link" onclick="showTab(event, 'livro')">Livro</button>
+    </div>
+</nav>
 
-    <main class="container">
-        <div class="status-bar"><div class="pulse"></div> <span id="peer-status">Iniciando Rede P2P...</span></div>
+<div class="wrapper">
+    <div id="status" class="p2p-badge">Aguardando rede...</div>
 
-        <section id="chat" class="tab-content active">
-            <div class="card">
-                <div class="chat-box" id="chat-display"></div>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="msg-in" placeholder="Mensagem..." style="margin:0">
-                    <button class="btn" style="width: 80px;" onclick="send()">Enviar</button>
-                </div>
+    <section id="chat" class="section active">
+        <div class="chat-container">
+            <div id="chat-list" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chat-in" placeholder="Diga algo aos outros legisladores...">
+                <button class="btn" onclick="enviarMensagem()">Enviar</button>
             </div>
-        </section>
+        </div>
+        <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-dim);">
+            Conectar com amigo: <input type="text" id="peer-target" placeholder="ID do amigo" style="width: 150px; padding: 4px; font-size: 0.8rem;">
+            <button onclick="conectarAmigo()" class="btn" style="padding: 4px 8px;">Conectar</button>
+        </div>
+    </section>
 
-        <section id="editor" class="tab-content">
-            <div class="card">
-                <h2>Criar Projeto de Lei</h2>
-                <input type="text" id="pl-t" placeholder="Título do Projeto">
-                <textarea id="pl-b" placeholder="Texto da proposta..."></textarea>
-                <button class="btn" onclick="createPL()">Publicar na Urna</button>
-            </div>
-        </section>
+    <section id="editor" class="section">
+        <div class="card">
+            <h3>Nova Proposta de Lei</h3>
+            <input type="text" id="pl-titulo" placeholder="Título da proposta">
+            <textarea id="pl-corpo" placeholder="Descreva sua proposta detalhadamente..."></textarea>
+            <button class="btn" onclick="criarPL()">Enviar para a Comunidade</button>
+        </div>
+    </section>
 
-        <section id="urna" class="tab-content">
-            <div id="urna-list"></div>
-        </section>
+    <section id="urna" class="section">
+        <div id="urna-list"></div>
+    </section>
 
-        <section id="livro" class="tab-content">
-            <div id="livro-list"></div>
-        </section>
-    </main>
+    <section id="livro" class="section">
+        <div class="card" style="border-left: 3px solid var(--primary);">
+            <h3>📜 Constituição Protocolar</h3>
+            <p>Este espaço é regido pela colaboração direta e sem intermediários.</p>
+        </div>
+        <div id="livro-list"></div>
+    </section>
+</div>
 
-    <script>
-        // --- LOGICA P2P AUTOMATICA ---
-        // Ele tenta ser HOST. Se falhar ou se alguém conectar, ele vira CLIENT.
-        const peer = new Peer('cyber-room-123'); // ID de sala fixo para teste simples
-        let connection;
+<script>
+    // --- LÓGICA P2P (PeerJS) ---
+    const peer = new Peer();
+    let conn;
 
-        peer.on('open', id => {
-            document.getElementById('peer-status').innerText = "Rede Ativa: " + id;
-            // Tenta conectar automaticamente a si mesmo para testar ou a outro peer
-            let conn = peer.connect('cyber-room-123'); 
-            handleConn(conn);
+    peer.on('open', (id) => {
+        document.getElementById('status').innerText = "Seu ID: " + id;
+    });
+
+    // Receber conexão
+    peer.on('connection', (c) => {
+        conn = c;
+        escutarDados();
+    });
+
+    // Conectar a alguém
+    function conectarAmigo() {
+        const targetId = document.getElementById('peer-target').value;
+        conn = peer.connect(targetId);
+        escutarDados();
+    }
+
+    function escutarDados() {
+        conn.on('open', () => {
+            addMensagem("Sistema", "Conexão P2P estabelecida!", false);
+            conn.on('data', (data) => {
+                if(data.type === 'chat') addMensagem("Legislador", data.val, false);
+                if(data.type === 'sync') { leis = data.val; atualizarListas(); }
+            });
         });
+    }
 
-        peer.on('connection', conn => {
-            handleConn(conn);
+    // --- FUNCIONAMENTO DO SITE ---
+    let leis = JSON.parse(localStorage.getItem('cyber_v3')) || [];
+
+    function showTab(e, name) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+        document.getElementById(name).classList.add('active');
+        e.currentTarget.classList.add('active');
+        atualizarListas();
+    }
+
+    function enviarMensagem() {
+        const input = document.getElementById('chat-in');
+        if(!input.value) return;
+        addMensagem("Você", input.value, true);
+        if(conn) conn.send({type: 'chat', val: input.value});
+        input.value = "";
+    }
+
+    function addMensagem(user, texto, isMe) {
+        const list = document.getElementById('chat-list');
+        const div = document.createElement('div');
+        div.className = `msg ${isMe ? 'me' : ''}`;
+        div.innerHTML = `<span class="msg-user">${user}</span><div class="msg-text">${texto}</div>`;
+        list.appendChild(div);
+        list.scrollTop = list.scrollHeight;
+    }
+
+    function criarPL() {
+        const t = document.getElementById('pl-titulo').value;
+        const c = document.getElementById('pl-corpo').value;
+        if(!t || !c) return;
+        leis.push({id: Date.now(), t, c, sim: 0, nao: 0, status: 'votação'});
+        salvar();
+        alert("Proposta enviada!");
+        if(conn) conn.send({type: 'sync', val: leis});
+    }
+
+    function atualizarListas() {
+        const urna = document.getElementById('urna-list');
+        const livro = document.getElementById('livro-list');
+        urna.innerHTML = ''; livro.innerHTML = '';
+
+        leis.forEach(l => {
+            const html = `
+                <div class="card">
+                    <h3>${l.t}</h3>
+                    <p>${l.c}</p>
+                    ${l.status === 'votação' ? `
+                        <button class="btn" onclick="votar(${l.id}, 'sim')">Aprovar (${l.sim})</button>
+                        <button class="btn btn-outline" onclick="votar(${l.id}, 'nao')">Reprovar (${l.nao})</button>
+                    ` : ''}
+                </div>`;
+            
+            if(l.status === 'votação') urna.innerHTML += html;
+            else livro.innerHTML += html;
         });
+    }
 
-        function handleConn(conn) {
-            connection = conn;
-            conn.on('data', data => {
-                if(data.type === 'chat') addMsg(data.val, false);
-                if(data.type === 'sync') { db = data.val; save(); }
-            });
-        }
+    function votar(id, tipo) {
+        const l = leis.find(x => x.id === id);
+        tipo === 'sim' ? l.sim++ : l.nao++;
+        if(l.sim >= 3) l.status = 'aprovada';
+        salvar();
+        atualizarListas();
+        if(conn) conn.send({type: 'sync', val: leis});
+    }
 
-        // --- INTERFACE ---
-        let db = JSON.parse(localStorage.getItem('cyber_p2p_fast')) || [];
+    function salvar() { localStorage.setItem('cyber_v3', JSON.stringify(leis)); }
+    
+    window.onload = atualizarListas;
+</script>
 
-        function tab(e, id) {
-            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.t-link').forEach(x => x.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            e.currentTarget.classList.add('active');
-            if(id === 'urna') renderUrna();
-            if(id === 'livro') renderLivro();
-        }
-
-        function send() {
-            const i = document.getElementById('msg-in');
-            if(!i.value) return;
-            addMsg(i.value, true);
-            if(connection) connection.send({type: 'chat', val: i.value});
-            i.value = "";
-        }
-
-        function addMsg(txt, me) {
-            const b = document.getElementById('chat-display');
-            const d = document.createElement('div');
-            d.className = `bubble ${me ? 'me' : ''}`;
-            d.innerText = txt;
-            b.appendChild(d);
-            b.scrollTop = b.scrollHeight;
-        }
-
-        function createPL() {
-            const t = document.getElementById('pl-t').value;
-            const b = document.getElementById('pl-b').value;
-            if(!t || !b) return;
-            db.push({id: Date.now(), t, b, up:0, down:0, status:'voting'});
-            save();
-            alert("PL Protocolada!");
-            if(connection) connection.send({type: 'sync', val: db});
-        }
-
-        function renderUrna() {
-            const l = document.getElementById('urna-list');
-            l.innerHTML = '';
-            db.filter(x => x.status === 'voting').forEach(p => {
-                l.innerHTML += `<div class="card"><h3>${p.t}</h3><p>${p.b}</p>
-                <div style="margin-top:10px">
-                    <button class="btn btn-vote" onclick="vote(${p.id}, 'up')">Aprovar (${p.up})</button>
-                    <button class="btn btn-vote" style="background:#ef4444" onclick="vote(${p.id}, 'down')">Recusar (${p.down})</button>
-                </div></div>`;
-            });
-        }
-
-        function vote(id, type) {
-            const p = db.find(x => x.id === id);
-            type === 'up' ? p.up++ : p.down++;
-            if(p.up >= 3) p.status = 'approved';
-            save();
-            renderUrna();
-            if(connection) connection.send({type: 'sync', val: db});
-        }
-
-        function renderLivro() {
-            const l = document.getElementById('livro-list');
-            l.innerHTML = '<div class="card"><h3>📜 LP-01: Constituição Digital</h3><p>O poder emana do código e do consenso.</p></div>';
-            db.filter(x => x.status === 'approved').forEach(p => {
-                l.innerHTML += `<div class="card"><h3>📜 ${p.t}</h3><p>${p.b}</p></div>`;
-            });
-        }
-
-        function save() { localStorage.setItem('cyber_p2p_fast', JSON.stringify(db)); }
-    </script>
 </body>
 </html>
