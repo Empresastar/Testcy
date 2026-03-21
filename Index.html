@@ -3,52 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybercracy P2P</title>
+    <title>Cybercracy P2P | Sistema Legislativo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h1>CYBERCRACY P2P</h1>
-        <div class="tabs">
-            <button onclick="openTab('chat')">Chat</button>
-            <button onclick="openTab('editor')">Editor PL</button>
-            <button onclick="openTab('urna')">Urna</button>
-            <button onclick="openTab('livro')">Livro da Lei</button>
-        </div>
-    </nav>
+    <header class="navbar">
+        <div class="logo">CYBERCRACY <span>P2P</span></div>
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'chat')">Chat Público</button>
+            <button class="tab-btn" onclick="openTab(event, 'editor')">Editor de PL</button>
+            <button class="tab-btn" onclick="openTab(event, 'urna')">Urna Livre</button>
+            <button class="tab-btn" onclick="openTab(event, 'livro')">Livro da Lei</button>
+        </nav>
+    </header>
 
-    <section id="chat" class="tab-content">
-        <h2>Chat Público</h2>
-        <div id="chat-box" class="display-area"></div>
-        <div class="input-group">
-            <input type="text" id="chat-input" placeholder="Debata sua ideia...">
-            <button onclick="sendMessage()">Enviar</button>
-        </div>
-    </section>
+    <main class="container">
+        <section id="chat" class="tab-content active">
+            <h2>🗨️ Debate e Resoluções</h2>
+            <div id="chat-box" class="display-area">
+                <p class="system-msg">Bem-vindo ao espaço de debate filosófico e político.</p>
+            </div>
+            <div class="input-group">
+                <input type="text" id="chat-input" placeholder="Proponha uma ideia ou debata um tema...">
+                <button onclick="sendMessage()">Enviar</button>
+            </div>
+        </section>
 
-    <section id="editor" class="tab-content" style="display:none">
-        <h2>Criador de Textos PL</h2>
-        <input type="text" id="pl-title" placeholder="Título do Projeto de Lei">
-        <textarea id="pl-text" placeholder="Escreva o corpo da lei aqui..."></textarea>
-        <button onclick="publishPL()">Publicar na Urna Livre</button>
-    </section>
+        <section id="editor" class="tab-content">
+            <h2>📝 Criador de Textos PL</h2>
+            <div class="form-card">
+                <input type="text" id="pl-title" placeholder="Título do Projeto de Lei (Ex: PL-001 - Educação)">
+                <textarea id="pl-text" placeholder="Descreva os artigos e parágrafos da sua lei..."></textarea>
+                <button class="btn-main" onclick="publishPL()">Publicar na Urna Livre</button>
+            </div>
+        </section>
 
-    <section id="urna" class="tab-content" style="display:none">
-        <h2>Urna de Voto Livre</h2>
-        <div id="urna-list" class="card-container"></div>
-    </section>
+        <section id="urna" class="tab-content">
+            <h2>🗳️ Urna de Voto Livre</h2>
+            <p>Analise os projetos e exerça seu papel legislador.</p>
+            <div id="urna-list" class="grid-container">
+                </div>
+        </section>
 
-    <section id="livro" class="tab-content" style="display:none">
-        <h2>Livro da Lei</h2>
-        <div class="protocol-section">
-            <h3>Leis Protocolares (LP)</h3>
-            <p><strong>LP-01:</strong> O sistema é regido pelo consenso P2P.</p>
-        </div>
-        <hr>
-        <div id="livro-list" class="card-container"></div>
-    </section>
+        <section id="livro" class="tab-content">
+            <h2>📖 Livro da Lei</h2>
+            <div class="protocol-box">
+                <h3>📜 Leis Protocolares (LP)</h3>
+                <p><strong>LP-01:</strong> Define o funcionamento técnico dos botões e comandos do sistema.</p>
+                <p><strong>LP-02:</strong> Estabelece o rito de aprovação por maioria simples.</p>
+            </div>
+            <div id="livro-list" class="grid-container">
+                </div>
+        </section>
+    </main>
 
     <script src="script.js"></script>
 </body>
-                 </html>
-                 
+</html>
