@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybercracy P2P | v2.0</title>
+    <title>Cybercracy P2P | Sistema Legislativo</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -19,22 +19,19 @@
 
     <main class="container">
         <section id="chat" class="tab-content active">
-            <div class="header-section">
-                <h2>🗨️ Debate Coletivo</h2>
-                <p>Proponha ideias antes de transformá-las em Projetos de Lei.</p>
-            </div>
+            <h2>🗨️ Debate Coletivo</h2>
             <div id="chat-box" class="chat-area"></div>
             <div class="chat-input-group">
                 <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
-                <button class="btn-send" onclick="sendMessage()">Enviar</button>
+                <button class="btn-send" id="btn-chat-send">Enviar</button>
             </div>
         </section>
 
         <section id="editor" class="tab-content">
             <h2>📝 Novo Projeto de Lei</h2>
             <div class="card-form">
-                <input type="text" id="pl-title" placeholder="Título (ex: PL-01 Protocolo de Segurança)">
-                <textarea id="pl-text" placeholder="Escreva o texto completo da proposta..."></textarea>
+                <input type="text" id="pl-title" placeholder="Título da PL">
+                <textarea id="pl-text" placeholder="Descreva o projeto..."></textarea>
                 <button class="btn-publish" onclick="publishPL()">Publicar na Urna</button>
             </div>
         </section>
@@ -45,7 +42,7 @@
         </section>
 
         <section id="livro" class="tab-content">
-            <h2>📖 Livro da Lei & Constituição</h2>
+            <h2>📖 Livro da Lei</h2>
             <div id="livro-list" class="grid-container"></div>
         </section>
     </main>
