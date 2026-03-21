@@ -3,48 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybercracy P2P | Rede Autônoma</title>
+    <title>Cybercracy | Rede Legislativa P2P</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
         :root {
-            --bg: #0f1117;
+            --bg: #0d0f14;
             --card: #161922;
             --primary: #4dabf7;
             --text: #e9ecef;
-            --dim: #868e96;
+            --dim: #9499b0;
             --border: #2c2e33;
+            --me-bg: #4dabf7;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
 
-        /* Estética Minimalista */
-        .nav { display: flex; justify-content: space-between; padding: 1rem 8%; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .nav h1 { font-size: 1.1rem; color: var(--primary); font-weight: 800; }
-        .tabs button { background: none; border: none; color: var(--dim); padding: 0.5rem 1rem; cursor: pointer; font-weight: 600; }
+        /* Navbar */
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 8%; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav h1 { font-size: 1.1rem; color: var(--primary); font-weight: 800; letter-spacing: 1px; }
+        .tabs button { background: none; border: none; color: var(--dim); padding: 0.6rem 1.2rem; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .tabs button.active { color: var(--text); border-bottom: 2px solid var(--primary); }
 
-        .container { max-width: 700px; margin: 2rem auto; padding: 0 1.5rem; }
+        /* Container */
+        .wrapper { max-width: 750px; margin: 2rem auto; padding: 0 1.5rem; }
         .section { display: none; }
-        .section.active { display: block; animation: slideUp 0.3s ease; }
+        .section.active { display: block; animation: slideUp 0.3s ease-out; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Chat e Cards */
-        .glass { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-        .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
-        .msg { background: #25262b; padding: 8px 14px; border-radius: 6px 14px 14px 14px; width: fit-content; max-width: 85%; font-size: 0.95rem; }
-        .msg.me { align-self: flex-end; background: var(--primary); color: #000; border-radius: 14px 14px 6px 14px; }
+        /* Status da Rede */
+        .net-status { font-size: 0.75rem; color: var(--dim); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; background: #1a1d26; padding: 8px 15px; border-radius: 20px; width: fit-content; border: 1px solid var(--border); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #51cf66; }
+        .dot.searching { background: #fcc419; animation: blink 1s infinite; }
 
-        .status-bar { font-size: 0.7rem; color: var(--dim); margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
-        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #51cf66; }
-        .status-dot.searching { background: #fcc419; animation: blink 1s infinite; }
+        /* Chat */
+        .chat-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+        .chat-box { height: 400px; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 12px; }
+        .msg { background: #25262b; padding: 10px 14px; border-radius: 4px 14px 14px 14px; width: fit-content; max-width: 85%; font-size: 0.95rem; }
+        .msg.me { align-self: flex-end; background: var(--me-bg); color: #000; border-radius: 14px 14px 4px 14px; font-weight: 500; }
+        .msg small { display: block; font-size: 0.7rem; opacity: 0.7; margin-bottom: 4px; }
 
-        input, textarea { width: 100%; background: #25262b; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: white; margin-bottom: 10px; font-size: 1rem; }
-        .btn { background: var(--primary); color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
+        .input-area { display: flex; padding: 1rem; background: #1a1d26; gap: 10px; border-top: 1px solid var(--border); }
+        input, textarea { flex: 1; background: #25262b; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: white; outline: none; }
+        input:focus { border-color: var(--primary); }
 
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        /* Cards */
+        .card { background: var(--card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; }
+        .btn { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -58,173 +67,215 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="status-bar"><div id="dot" class="status-dot searching"></div> <span id="net-info">Iniciando protocolo P2P...</span></div>
+<div class="wrapper">
+    <div class="net-status">
+        <div id="status-dot" class="dot searching"></div>
+        <span id="status-text">Iniciando protocolo P2P...</span>
+    </div>
 
     <section id="chat" class="section active">
-        <div class="glass">
-            <div id="chat-list" class="chat-box"></div>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="chat-in" placeholder="Escreva sua proposta..." onkeypress="if(event.key==='Enter') send()">
-                <button class="btn" onclick="send()">Enviar</button>
+        <div class="chat-container">
+            <div id="chat-display" class="chat-box"></div>
+            <div class="input-area">
+                <input type="text" id="chat-input" placeholder="Contribua com a rede..." onkeypress="if(event.key==='Enter') sendMsg()">
+                <button class="btn" onclick="sendMsg()">Enviar</button>
             </div>
         </div>
     </section>
 
     <section id="urna" class="section">
-        <div class="glass">
-            <h3>Nova PL</h3>
-            <input type="text" id="pl-t" placeholder="Título">
-            <textarea id="pl-b" placeholder="Texto da Lei..."></textarea>
-            <button class="btn" onclick="createPL()">Publicar</button>
+        <div class="card">
+            <h3 style="margin-bottom:15px">Propor Nova Lei</h3>
+            <input type="text" id="pl-title" placeholder="Título do Projeto" style="margin-bottom:10px">
+            <textarea id="pl-body" placeholder="Texto da proposta..." style="margin-bottom:10px; height: 80px;"></textarea>
+            <button class="btn" onclick="proposePL()" style="width:100%">Publicar para Votação</button>
         </div>
         <div id="urna-list"></div>
     </section>
 
     <section id="livro" class="section">
+        <div class="card" style="border-left: 4px solid var(--primary)">
+            <h3>📜 Protocolo Zero</h3>
+            <p style="color:var(--dim)">Esta rede é soberana e autogestionada pelos pares conectados.</p>
+        </div>
         <div id="livro-list"></div>
     </section>
 </div>
 
 <script>
-    const ROOM_ID = "cybercracy-global-room-v1"; // ID Único da sala
+    const ROOM_ID = "cybercracy-global-2026"; // ID da sala comum
     let peer = null;
-    let connections = []; // Se for host, guarda todos. Se for client, guarda o host.
+    let connections = [];
     let isHost = false;
+    let db = JSON.parse(localStorage.getItem('cyber_p2p_db')) || [];
 
-    // Inicializa a rede
+    // --- LÓGICA DE REDE P2P ---
+
     function initNetwork() {
-        // Tenta virar o Host
+        // Tenta ser o Host principal da sala
         peer = new Peer(ROOM_ID);
 
         peer.on('open', (id) => {
-            console.log("Você é o HOST da rede.");
             isHost = true;
-            updateStatus("Host Ativo (Servidor Coletivo)");
-            setupHost();
+            updateStatus("Você é o Líder da Rede (Host)");
+            setupHostListeners();
         });
 
         peer.on('error', (err) => {
             if (err.type === 'unavailable-id') {
-                // Se o ID já existe, você é um CLIENT
                 isHost = false;
-                startClient();
+                startAsClient();
             }
         });
     }
 
-    // --- LÓGICA DO HOST ---
-    function setupHost() {
+    function setupHostListeners() {
         peer.on('connection', (conn) => {
             connections.push(conn);
-            updateStatus(`Host: ${connections.length + 1} legisladores online`);
+            updateStatus(`Host Ativo: ${connections.length + 1} online`);
             
+            // Sincroniza o banco de dados com o novo integrante
+            setTimeout(() => conn.send({ type: 'sync', val: db }), 500);
+
             conn.on('data', (data) => {
-                // O Host recebe e replica para todos (Broadcast)
-                broadcast(data);
-                handleData(data);
+                // BUG FIX: Retransmite para todos EXCETO para quem mandou (evita eco)
+                broadcast(data, conn.peer);
+                handleData(data, conn.peer);
             });
 
             conn.on('close', () => {
                 connections = connections.filter(c => c.peer !== conn.peer);
-                updateStatus(`Host: ${connections.length + 1} online`);
+                updateStatus(`Host Ativo: ${connections.length + 1} online`);
             });
         });
     }
 
-    function broadcast(data) {
-        connections.forEach(c => c.send(data));
+    function startAsClient() {
+        peer = new Peer(); // Gera ID aleatório para o cliente
+        peer.on('open', (myId) => {
+            const conn = peer.connect(ROOM_ID);
+            handleClientConn(conn);
+        });
     }
 
-    // --- LÓGICA DO CLIENTE ---
-    function startClient() {
-        peer = new Peer(); // Cria um ID aleatório para o cliente
-        peer.on('open', (id) => {
-            updateStatus("Conectando ao Host...");
-            const conn = peer.connect(ROOM_ID);
-            
-            conn.on('open', () => {
-                isHost = false;
-                connections = [conn];
-                updateStatus("Conectado à rede P2P");
-                document.getElementById('dot').classList.remove('searching');
-            });
+    function handleClientConn(conn) {
+        conn.on('open', () => {
+            connections = [conn];
+            updateStatus("Conectado à Rede Coletiva");
+            document.getElementById('status-dot').classList.remove('searching');
+        });
 
-            conn.on('data', (data) => handleData(data));
+        conn.on('data', (data) => handleData(data, conn.peer));
 
-            conn.on('close', () => {
-                updateStatus("Host caiu! Elegendo novo líder...");
-                document.getElementById('dot').classList.add('searching');
-                // Tenta virar o novo host após um delay aleatório para evitar colisão
-                setTimeout(initNetwork, Math.random() * 2000);
-            });
+        conn.on('close', () => {
+            updateStatus("Líder offline. Elegendo novo Host...");
+            document.getElementById('status-dot').classList.add('searching');
+            setTimeout(initNetwork, Math.random() * 2000); // Tenta assumir o Host
+        });
+    }
+
+    function broadcast(data, excludeId) {
+        connections.forEach(c => {
+            if (c.peer !== excludeId) c.send(data);
         });
     }
 
     // --- PROCESSAMENTO DE DADOS ---
-    let db = JSON.parse(localStorage.getItem('cyber_db')) || [];
 
-    function handleData(data) {
-        if(data.type === 'msg') addMsg(data.user, data.val, false);
-        if(data.type === 'sync') { db = data.val; renderAll(); }
-    }
+    function handleData(data, senderId) {
+        // Ignora se a mensagem for um eco meu (segurança extra)
+        if (data.sender === peer.id) return;
 
-    function send() {
-        const i = document.getElementById('chat-in');
-        if(!i.value) return;
-        const msg = { type: 'msg', user: 'Legislador', val: i.value };
-        
-        if(isHost) {
-            broadcast(msg);
-            addMsg("Você", i.value, true);
-        } else if(connections[0]) {
-            connections[0].send(msg);
-            addMsg("Você", i.value, true);
+        if (data.type === 'msg') {
+            renderMsg(data.user, data.val, false);
         }
-        i.value = "";
+        if (data.type === 'sync') {
+            db = data.val;
+            renderLists();
+        }
     }
 
-    function addMsg(user, txt, me) {
-        const box = document.getElementById('chat-list');
-        const div = document.createElement('div');
-        div.className = `msg ${me ? 'me' : ''}`;
-        div.innerHTML = `<small style="display:block; font-size:0.6rem; opacity:0.6">${user}</small>${txt}`;
-        box.appendChild(div);
+    function sendMsg() {
+        const inp = document.getElementById('chat-input');
+        if (!inp.value.trim()) return;
+
+        const payload = { 
+            type: 'msg', 
+            user: 'Legislador', 
+            val: inp.value,
+            sender: peer.id 
+        };
+
+        renderMsg("Você", inp.value, true);
+
+        if (isHost) broadcast(payload, peer.id);
+        else if (connections[0]) connections[0].send(payload);
+
+        inp.value = "";
+    }
+
+    function renderMsg(user, txt, isMe) {
+        const box = document.getElementById('chat-display');
+        const d = document.createElement('div');
+        d.className = `msg ${isMe ? 'me' : ''}`;
+        d.innerHTML = `<small>${user}</small>${txt}`;
+        box.appendChild(d);
         box.scrollTop = box.scrollHeight;
     }
 
-    // --- INTERFACE ---
-    function tab(e, id) {
+    // --- INTERFACE E LEIS ---
+
+    function tab(e, name) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        document.getElementById(name).classList.add('active');
         e.currentTarget.classList.add('active');
-        renderAll();
+        renderLists();
     }
 
     function updateStatus(txt) {
-        document.getElementById('net-info').innerText = txt;
+        document.getElementById('status-text').innerText = txt;
     }
 
-    function createPL() {
-        const t = document.getElementById('pl-t').value;
-        const b = document.getElementById('pl-b').value;
-        if(!t || !b) return;
-        db.push({id: Date.now(), t, b, up: 0, status: 'votação'});
-        const data = { type: 'sync', val: db };
-        isHost ? broadcast(data) : connections[0].send(data);
-        renderAll();
+    function proposePL() {
+        const t = document.getElementById('pl-title').value;
+        const b = document.getElementById('pl-body').value;
+        if (!t || !b) return;
+
+        db.push({ id: Date.now(), t, b, up: 0, status: 'votação' });
+        syncAll();
+        document.getElementById('pl-title').value = "";
+        document.getElementById('pl-body').value = "";
     }
 
-    function renderAll() {
+    function syncAll() {
+        const payload = { type: 'sync', val: db };
+        if (isHost) broadcast(payload, peer.id);
+        else if (connections[0]) connections[0].send(payload);
+        renderLists();
+    }
+
+    function vote(id) {
+        const pl = db.find(x => x.id === id);
+        pl.up++;
+        if (pl.up >= 3) pl.status = 'aprovada';
+        syncAll();
+    }
+
+    function renderLists() {
         const u = document.getElementById('urna-list');
         const l = document.getElementById('livro-list');
         u.innerHTML = ''; l.innerHTML = '';
+
         db.forEach(p => {
-            const card = `<div class="glass"><h3>${p.t}</h3><p>${p.b}</p></div>`;
+            const card = `<div class="card">
+                <h3>${p.t}</h3>
+                <p style="color:var(--dim); margin-bottom:10px">${p.b}</p>
+                ${p.status === 'votação' ? `<button class="btn" onclick="vote(${p.id})">Aprovar Proposta (${p.up})</button>` : ''}
+            </div>`;
             p.status === 'votação' ? u.innerHTML += card : l.innerHTML += card;
         });
-        localStorage.setItem('cyber_db', JSON.stringify(db));
+        localStorage.setItem('cyber_p2p_db', JSON.stringify(db));
     }
 
     initNetwork();
