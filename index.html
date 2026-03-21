@@ -3,115 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybercracy P2P | Governança Digital</title>
+    <title>Cybercracy P2P | Light & Fast</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
         :root {
-            --primary: #00f2fe;
-            --accent: #4facfe;
-            --bg: #0b0e14;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text: #e2e8f0;
+            --primary: #00d2ff;
+            --accent: #3a47d5;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --glass: rgba(30, 41, 59, 0.7);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: radial-gradient(circle at top right, #1e293b, #0f172a, #000);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            /* Gradiente estático é muito mais leve que animado */
+            background-image: radial-gradient(circle at 50% -20%, #1e40af, #0f172a 80%);
             color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        /* Background Animado */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent 45%, var(--glass-border) 50%, transparent 55%);
-            background-size: 200% 200%;
-            animation: shine 10s infinite linear;
-            z-index: -1;
-        }
-
-        @keyframes shine {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* Navbar */
+        /* Navbar fixa e leve */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 5%;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky; top: 0; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
-        .logo span { background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo { font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .logo span { color: var(--primary); }
 
-        .nav-links button {
+        .tabs button {
             background: none; border: none; color: #94a3b8;
-            padding: 0.5rem 1rem; cursor: pointer; font-weight: 600;
-            transition: all 0.3s ease; border-radius: 8px;
+            padding: 10px 15px; cursor: pointer; font-weight: 600;
+            transition: color 0.2s;
         }
 
-        .nav-links button.active { color: var(--primary); background: var(--glass); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .tabs button.active { color: var(--primary); }
 
-        /* Container Principal */
-        .main-container { max-width: 900px; margin: 3rem auto; padding: 0 20px; }
+        /* Container centralizado */
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 20px; }
 
-        .tab-content { display: none; animation: fadeInUp 0.5s ease forwards; }
-        .tab-content.active { display: block; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: simpleFade 0.3s ease-in; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes simpleFade { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Cards estilo Moderno (sem blur pesado para não travar) */
+        .card {
+            background: var(--card); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        /* Cards & UI Elements */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            margin-bottom: 1.5rem;
+        /* Chat */
+        .chat-box {
+            height: 300px; overflow-y: auto; background: rgba(0,0,0,0.2);
+            border-radius: 8px; padding: 15px; margin-bottom: 15px;
+            display: flex; flex-direction: column; gap: 8px;
         }
+        .bubble { background: #334155; padding: 8px 12px; border-radius: 12px; width: fit-content; max-width: 85%; font-size: 0.95rem; }
+        .bubble.me { align-self: flex-end; background: var(--accent); color: white; }
 
-        .status-p2p { font-size: 0.8rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-        .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse 1.5s infinite; }
+        /* Status P2P */
+        .status-bar { font-size: 0.75rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 5px; }
+        .pulse { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
-
+        /* Inputs e Botões */
         input, textarea {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
-            border-radius: 12px; padding: 1rem; color: white; margin-bottom: 1rem;
-            transition: border 0.3s;
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155;
+            background: #0f172a; color: white; margin-bottom: 10px;
         }
-
-        input:focus { border-color: var(--primary); outline: none; }
-
-        .btn-action {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #000; border: none; padding: 1rem 2rem;
-            border-radius: 12px; font-weight: 700; cursor: pointer;
-            width: 100%; transition: transform 0.2s, box-shadow 0.2s;
+        .btn {
+            background: var(--primary); color: #0f172a; border: none;
+            padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
+            width: 100%; transition: opacity 0.2s;
         }
-
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4); }
-
-        /* Chat area */
-        .chat-window { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
-        .bubble { background: var(--glass); padding: 0.8rem 1.2rem; border-radius: 15px; width: fit-content; max-width: 80%; border: 1px solid var(--glass-border); }
-        .bubble.me { align-self: flex-end; border-color: var(--primary); background: rgba(0, 242, 254, 0.1); }
+        .btn:active { transform: scale(0.98); }
+        .btn-vote { width: auto; padding: 6px 15px; margin-right: 10px; }
 
     </style>
 </head>
@@ -119,34 +94,33 @@
 
     <header class="navbar">
         <div class="logo">CYBER<span>CRACY</span></div>
-        <div class="nav-links">
-            <button class="t-btn active" onclick="switchTab(event, 'chat')">Chat</button>
-            <button class="t-btn" onclick="switchTab(event, 'editor')">Editor</button>
-            <button class="t-btn" onclick="switchTab(event, 'urna')">Urna</button>
-            <button class="t-btn" onclick="switchTab(event, 'livro')">Livro</button>
-        </div>
+        <nav class="tabs">
+            <button class="t-link active" onclick="tab(event, 'chat')">Chat</button>
+            <button class="t-link" onclick="tab(event, 'editor')">Editor</button>
+            <button class="t-link" onclick="tab(event, 'urna')">Urna</button>
+            <button class="t-link" onclick="tab(event, 'livro')">Livro</button>
+        </nav>
     </header>
 
-    <main class="main-container">
-        <div id="p2p-info" class="status-p2p"><span class="dot"></span> <span id="peer-id">Conectando ao rito P2P...</span></div>
+    <main class="container">
+        <div class="status-bar"><div class="pulse"></div> <span id="peer-status">Iniciando Rede P2P...</span></div>
 
         <section id="chat" class="tab-content active">
-            <div class="glass-card">
-                <div class="chat-window" id="chat-box"></div>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="chat-in" placeholder="Envie uma ideia para a rede..." style="margin: 0;">
-                    <button class="btn-action" onclick="sendMsg()" style="width: 100px;">Enviar</button>
+            <div class="card">
+                <div class="chat-box" id="chat-display"></div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="msg-in" placeholder="Mensagem..." style="margin:0">
+                    <button class="btn" style="width: 80px;" onclick="send()">Enviar</button>
                 </div>
             </div>
         </section>
 
         <section id="editor" class="tab-content">
-            <div class="glass-card">
-                <h2>📜 Nova Proposta de Lei</h2>
-                <p style="color: #94a3b8; margin-bottom: 1.5rem;">O rito legislativo começa aqui.</p>
-                <input type="text" id="pl-title" placeholder="Título da PL">
-                <textarea id="pl-body" placeholder="Texto jurídico e social..."></textarea>
-                <button class="btn-action" onclick="createPL()">Publicar na Urna</button>
+            <div class="card">
+                <h2>Criar Projeto de Lei</h2>
+                <input type="text" id="pl-t" placeholder="Título do Projeto">
+                <textarea id="pl-b" placeholder="Texto da proposta..."></textarea>
+                <button class="btn" onclick="createPL()">Publicar na Urna</button>
             </div>
         </section>
 
@@ -155,116 +129,104 @@
         </section>
 
         <section id="livro" class="tab-content">
-            <div class="glass-card">
-                <h3>📖 Constituição Protocolear</h3>
-                <p>Leis fundamentais aprovadas pela rede.</p>
-            </div>
             <div id="livro-list"></div>
         </section>
     </main>
 
     <script>
-        // --- LÓGICA P2P (PeerJS) ---
-        // Em um sistema real, você precisaria de um ID de sala. Aqui usamos um ID fixo para teste
-        const peer = new Peer('cyber-hub-2026-' + Math.floor(Math.random() * 100)); 
-        let conn;
+        // --- LOGICA P2P AUTOMATICA ---
+        // Ele tenta ser HOST. Se falhar ou se alguém conectar, ele vira CLIENT.
+        const peer = new Peer('cyber-room-123'); // ID de sala fixo para teste simples
+        let connection;
 
-        peer.on('open', (id) => {
-            document.getElementById('peer-id').innerText = "ID Legislador: " + id;
-            // Tenta conectar a um ID conhecido ou espera conexões
+        peer.on('open', id => {
+            document.getElementById('peer-status').innerText = "Rede Ativa: " + id;
+            // Tenta conectar automaticamente a si mesmo para testar ou a outro peer
+            let conn = peer.connect('cyber-room-123'); 
+            handleConn(conn);
         });
 
-        peer.on('connection', (c) => {
-            conn = c;
-            setupConn();
+        peer.on('connection', conn => {
+            handleConn(conn);
         });
 
-        function setupConn() {
-            conn.on('data', (data) => {
-                if(data.type === 'msg') addBubble(data.val, false);
-                if(data.type === 'pl') {
-                    db.push(data.val);
-                    save();
-                }
+        function handleConn(conn) {
+            connection = conn;
+            conn.on('data', data => {
+                if(data.type === 'chat') addMsg(data.val, false);
+                if(data.type === 'sync') { db = data.val; save(); }
             });
         }
 
-        // --- SISTEMA DE ABAS ---
-        function switchTab(e, name) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(name).classList.add('active');
+        // --- INTERFACE ---
+        let db = JSON.parse(localStorage.getItem('cyber_p2p_fast')) || [];
+
+        function tab(e, id) {
+            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.t-link').forEach(x => x.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
             e.currentTarget.classList.add('active');
-            if(name === 'urna') renderUrna();
-            if(name === 'livro') renderLivro();
+            if(id === 'urna') renderUrna();
+            if(id === 'livro') renderLivro();
         }
 
-        // --- DATABASE LOCAL ---
-        let db = JSON.parse(localStorage.getItem('cyber_p2p_v3')) || [];
-
-        function save() { localStorage.setItem('cyber_p2p_v3', JSON.stringify(db)); }
-
-        // --- FUNÇÕES CORE ---
-        function sendMsg() {
-            const inp = document.getElementById('chat-in');
-            if(!inp.value) return;
-            addBubble(inp.value, true);
-            if(conn) conn.send({type: 'msg', val: inp.value});
-            inp.value = "";
+        function send() {
+            const i = document.getElementById('msg-in');
+            if(!i.value) return;
+            addMsg(i.value, true);
+            if(connection) connection.send({type: 'chat', val: i.value});
+            i.value = "";
         }
 
-        function addBubble(txt, isMe) {
-            const box = document.getElementById('chat-box');
-            const b = document.createElement('div');
-            b.className = `bubble ${isMe ? 'me' : ''}`;
-            b.innerText = txt;
-            box.appendChild(b);
-            box.scrollTop = box.scrollHeight;
+        function addMsg(txt, me) {
+            const b = document.getElementById('chat-display');
+            const d = document.createElement('div');
+            d.className = `bubble ${me ? 'me' : ''}`;
+            d.innerText = txt;
+            b.appendChild(d);
+            b.scrollTop = b.scrollHeight;
         }
 
         function createPL() {
-            const t = document.getElementById('pl-title').value;
-            const b = document.getElementById('pl-body').value;
+            const t = document.getElementById('pl-t').value;
+            const b = document.getElementById('pl-b').value;
             if(!t || !b) return;
-
-            const pl = { id: Date.now(), title: t, body: b, up: 0, down: 0, status: 'voting' };
-            db.push(pl);
+            db.push({id: Date.now(), t, b, up:0, down:0, status:'voting'});
             save();
             alert("PL Protocolada!");
-            switchTab({currentTarget: document.querySelectorAll('.t-btn')[2]}, 'urna');
+            if(connection) connection.send({type: 'sync', val: db});
         }
 
         function renderUrna() {
-            const list = document.getElementById('urna-list');
-            list.innerHTML = '';
-            db.filter(p => p.status === 'voting').forEach(p => {
-                list.innerHTML += `
-                    <div class="glass-card">
-                        <h3>${p.title}</h3>
-                        <p style="margin: 10px 0; font-size: 0.9rem; opacity: 0.8;">${p.body}</p>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-action" style="background:#10b981" onclick="vote(${p.id}, 'up')">Aprovar (${p.up})</button>
-                            <button class="btn-action" style="background:#ef4444" onclick="vote(${p.id}, 'down')">Rejeitar (${p.down})</button>
-                        </div>
-                    </div>`;
+            const l = document.getElementById('urna-list');
+            l.innerHTML = '';
+            db.filter(x => x.status === 'voting').forEach(p => {
+                l.innerHTML += `<div class="card"><h3>${p.t}</h3><p>${p.b}</p>
+                <div style="margin-top:10px">
+                    <button class="btn btn-vote" onclick="vote(${p.id}, 'up')">Aprovar (${p.up})</button>
+                    <button class="btn btn-vote" style="background:#ef4444" onclick="vote(${p.id}, 'down')">Recusar (${p.down})</button>
+                </div></div>`;
             });
         }
 
         function vote(id, type) {
-            const pl = db.find(x => x.id === id);
-            type === 'up' ? pl.up++ : pl.down++;
-            if(pl.up >= 3) pl.status = 'approved';
+            const p = db.find(x => x.id === id);
+            type === 'up' ? p.up++ : p.down++;
+            if(p.up >= 3) p.status = 'approved';
             save();
             renderUrna();
+            if(connection) connection.send({type: 'sync', val: db});
         }
 
         function renderLivro() {
-            const list = document.getElementById('livro-list');
-            list.innerHTML = '';
-            db.filter(p => p.status === 'approved').forEach(p => {
-                list.innerHTML += `<div class="glass-card" style="border-left: 4px solid var(--primary)"><h3>📜 ${p.title}</h3><p>${p.body}</p></div>`;
+            const l = document.getElementById('livro-list');
+            l.innerHTML = '<div class="card"><h3>📜 LP-01: Constituição Digital</h3><p>O poder emana do código e do consenso.</p></div>';
+            db.filter(x => x.status === 'approved').forEach(p => {
+                l.innerHTML += `<div class="card"><h3>📜 ${p.t}</h3><p>${p.b}</p></div>`;
             });
         }
+
+        function save() { localStorage.setItem('cyber_p2p_fast', JSON.stringify(db)); }
     </script>
 </body>
 </html>
