@@ -1,88 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <title>Cybercracy - Leis Reais</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
-        :root { --blue: #00d2ff; --bg: #0f172a; --red: #ff4444; --green: #00ff88; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; }
-        .header { background: #000; padding: 10px; text-align: center; border-bottom: 1px solid #333; }
-        nav { display: flex; background: #111; }
-        nav button { flex: 1; padding: 15px; background: none; border: none; color: #777; font-weight: bold; cursor: pointer; }
-        nav button.active { color: var(--blue); border-bottom: 2px solid var(--blue); }
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        .view { display: none; } .active { display: block; }
-        .card { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; position: relative; }
-        .btn-vote-sim { background: var(--green); color: #000; border: none; padding: 10px; width: 48%; cursor: pointer; font-weight: bold; border-radius: 5px; }
-        .btn-vote-nao { background: var(--red); color: #fff; border: none; padding: 10px; width: 48%; cursor: pointer; font-weight: bold; border-radius: 5px; }
-        .btn-del { background: none; color: var(--red); border: 1px solid var(--red); padding: 5px; cursor: pointer; font-size: 10px; margin-top: 10px; }
-        #chat { height: 200px; overflow-y: auto; background: #000; padding: 10px; border: 1px solid #333; margin-bottom: 10px; font-size: 14px; }
-        input, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; background: #000; color: #fff; border: 1px solid #333; box-sizing: border-box; }
+        :root { --bg: #0d0f14; --card: #161922; --primary: #4dabf7; --yellow: #ffff00; --green: #00ff88; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        nav { display: grid; grid-template-columns: repeat(5, 1fr); background: #000; border-bottom: 1px solid #333; }
+        nav button { padding: 18px 2px; background: none; border: none; color: #555; cursor: pointer; font-size: 8px; font-weight: bold; text-transform: uppercase; }
+        nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+
+        .container { flex: 1; max-width: 500px; margin: 0 auto; width: 100%; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .section { display: none; }
+        .active-s { display: block; }
+
+        .card { background: var(--card); border: 1px solid #333; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid #333; }
+        .card-voto { border-left-color: var(--primary); }
+        .card-lei-real { border-left-color: var(--green); background: rgba(0, 255, 136, 0.03); }
+
+        #chat-box { height: 350px; overflow-y: auto; background: #000; padding: 15px; border-radius: 12px; border: 1px solid #222; margin-bottom: 10px; }
+        .msg-amarela { color: var(--yellow); font-size: 14px; background: rgba(255,255,0,0.05); padding: 8px; border-radius: 5px; margin-bottom: 8px; }
+        
+        .btn-v { width: 48%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; margin-top: 10px; }
+        input, textarea { width: 100%; background: #1a1d26; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div id="clock" style="font-family: monospace; color: var(--green);">00:00:00</div>
-    </div>
-    <nav>
-        <button onclick="tab('urna',this)" class="active">URNA</button>
-        <button onclick="tab('livro',this)">LIVRO</button>
-        <button onclick="tab('edit',this)">CRIAR</button>
-        <button onclick="tab('chat',this)">CHAT</button>
-    </nav>
 
-    <div class="container">
-        <div id="v-urna" class="view active"><h3>Votação em Aberto</h3><div id="ulist"></div></div>
-        <div id="v-livro" class="view"><h3>Leis em Vigor</h3><div id="llist"></div></div>
-        <div id="v-edit" class="view">
-            <input type="text" id="plt" placeholder="Título do Projeto">
-            <textarea id="plb" rows="4" placeholder="Escreva sua lei..."></textarea>
-            <button style="background:var(--blue); color:white; padding:15px; width:100%; border:none; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="sendPL()">PUBLICAR PARA VOTAÇÃO</button>
+<nav>
+    <button id="b-chat" class="active" onclick="tab('chat')">1. CHAT</button>
+    <button id="b-escolher" onclick="tab('escolher')">2. ESCOLHER</button>
+    <button id="b-colocar" onclick="tab('colocar')">3. COLOCAR LEI</button>
+    <button id="b-pos" onclick="tab('pos')">4. LEIS</button>
+    <button id="b-livro" onclick="tab('livro')">5. LIVROS</button>
+</nav>
+
+<div class="container">
+    <section id="chat" class="section active-s">
+        <div id="chat-box"></div>
+        <div style="display:flex; gap:10px">
+            <input type="text" id="c-in" placeholder="Escreva aqui...">
+            <button onclick="enviarChat()" style="background:var(--primary); border:none; border-radius:8px; padding:0 20px; cursor:pointer">💬</button>
         </div>
-        <div id="v-chat" class="view">
-            <div id="chat"></div>
-            <input type="text" id="cin" placeholder="Mensagem...">
-            <button style="background:var(--blue); border:none; color:white; padding:10px; width:100%;" onclick="sendChat()">ENVIAR</button>
+    </section>
+
+    <section id="escolher" class="section">
+        <h3 style="text-align:center; color:var(--primary)">VOTAÇÕES ABERTAS</h3>
+        <div id="lista-votos"></div>
+    </section>
+
+    <section id="colocar" class="section">
+        <div class="card">
+            <h2>Criar Lei</h2>
+            <input type="text" id="p-t" placeholder="Título">
+            <textarea id="p-b" rows="3" placeholder="O que esta lei faz?"></textarea>
+            <button onclick="propor()" style="width:100%; padding:15px; background:var(--primary); border:none; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer">LANÇAR LEI</button>
         </div>
-    </div>
+    </section>
 
-    <script>
-        setInterval(() => { document.getElementById('clock').innerText = "SISTEMA SINCRONIZADO: " + new Date().toLocaleTimeString(); }, 1000);
-        let peer = new Peer(), conn, myId;
-        peer.on('open', id => { myId = id; conn = peer.connect("CYBER_HUB_GLOBAL"); setup(); });
+    <section id="pos" class="section">
+        <h2 style="text-align:center; color:var(--green)">⚖️ LEIS EM VIGOR</h2>
+        <div id="leis-reais-lista"></div>
+    </section>
+
+    <section id="livro" class="section">
+        </section>
+</div>
+
+<script>
+    let peer = new Peer(), conn, db = {chat:[], urna:[], livro:[]}, meuID;
+
+    peer.on('open', id => {
+        meuID = id;
+        conn = peer.connect("CYBER_PRO_SERVER_2026");
+        conn.on('data', d => { if(d.type === 'SYNC') atualizar(d.data); });
+    });
+
+    function tab(n) {
+        document.querySelectorAll('.section, nav button').forEach(el => el.classList.remove('active', 'active-s'));
+        document.getElementById(n).classList.add('active-s');
+        document.getElementById('b-'+n).classList.add('active');
+    }
+
+    function enviarChat() {
+        const input = document.getElementById('c-in');
+        if(input.value) conn.send({ type: 'CHAT', msg: input.value });
+        input.value = "";
+    }
+
+    function propor() {
+        const t = document.getElementById('p-t').value;
+        if(!t) return;
+        conn.send({ type: 'PROPOSE', pl: { id: Date.now(), t: t, b: document.getElementById('p-b').value, sim: 0, nao: 0, quemVotou: [] } });
+        document.getElementById('p-t').value = ""; document.getElementById('p-b').value = "";
+        tab('escolher');
+    }
+
+    function votar(id, v) {
+        conn.send({ type: 'VOTE', id: id, voto: v });
+        tab('pos');
+    }
+
+    function atualizar(data) {
+        db = data;
         
-        function setup() { conn.on('data', d => { if(d.tipo === 'SYNC') render(d.data); }); }
-        
-        function tab(v, b) {
-            document.querySelectorAll('.view, nav button').forEach(x => x.classList.remove('active'));
-            document.getElementById('v-'+v).classList.add('active'); b.classList.add('active');
-        }
+        // 1. Chat
+        document.getElementById('chat-box').innerHTML = (db.chat || []).map(m => `<div class="msg-amarela">💬 ${m.msg}</div>`).join('');
+        document.getElementById('chat-box').scrollTop = 99999;
 
-        function sendPL() {
-            const pl = { id: Date.now(), t: document.getElementById('plt').value, b: document.getElementById('plb').value, autor: myId, sim: 0, nao: 0 };
-            conn.send({ tipo: 'PL', pl: pl, sender: myId });
-            tab('urna', document.querySelector('nav button'));
-        }
+        // 2. Escolher
+        const listaVotos = document.getElementById('lista-votos');
+        listaVotos.innerHTML = (db.urna || []).map(l => {
+            const jaVotou = l.quemVotou.includes(meuID);
+            if(jaVotou) return `<div class="card"><b>${l.t}</b><br><span style="color:#666; font-size:11px">Voto computado.</span></div>`;
+            return `
+                <div class="card card-voto">
+                    <b>${l.t}</b><p style="font-size:13px; color:#aaa">${l.b}</p>
+                    <button class="btn-v" style="background:#ff4444" onclick="votar(${l.id},'NAO')">NÃO</button>
+                    <button class="btn-v" style="background:#00aa44" onclick="votar(${l.id},'SIM')">SIM</button>
+                </div>`;
+        }).join('') || "<p style='text-align:center; color:#555'>Nenhuma lei para votar.</p>";
 
-        function votar(id, escolha) { conn.send({ tipo: 'VOTAR', id: id, voto: escolha, sender: myId }); }
-        function remover(id) { if(confirm("Apagar seu projeto?")) conn.send({ tipo: 'REMOVER', id: id }); }
-        function sendChat() { conn.send({ tipo: 'CHAT', sender: myId.substring(0,4), msg: document.getElementById('cin').value }); document.getElementById('cin').value = ""; }
-
-        function render(db) {
-            document.getElementById('ulist').innerHTML = db.urna.map(p => `
-                <div class="card">
-                    <b>${p.t}</b><p style="font-size:14px">${p.b}</p>
-                    <div style="display:flex; justify-content:space-between">
-                        <button class="btn-vote-sim" onclick="votar(${p.id}, 'SIM')">SIM (${p.sim})</button>
-                        <button class="btn-vote-nao" onclick="votar(${p.id}, 'NAO')">NÃO (${p.nao})</button>
-                    </div>
-                    ${p.autor === myId ? `<button class="btn-del" onclick="remover(${p.id})">✖ APAGAR MEU PROJETO</button>` : ''}
-                </div>`).join('');
-            
-            document.getElementById('llist').innerHTML = db.livro.map(l => `<div class="card" style="border-left:5px solid var(--green)"><b>${l.t}</b><p>${l.b}</p></div>`).join('');
-            document.getElementById('chat').innerHTML = db.chat.map(m => `<div><b>${m.sender}:</b> ${m.msg}</div>`).join('');
-            const c = document.getElementById('chat'); c.scrollTop = c.scrollHeight;
-        }
-    </script>
+        // 4. LEIS (ONDE ELAS FICAM FIXAS)
+        const leisReais = document.getElementById('leis-reais-lista');
+        leisReais.innerHTML = (db.livro || []).map(l => `
+            <div class="card card-lei-real">
+                <h3 style="margin:0; color:var(--green)">📜 ${l.t}</h3>
+                <p style="font-size:14px; color:#eee; margin-top:10px">${l.b}</p>
+            </div>
+        `).join('') || "<p style='text-align:center; color:#555'>Nenhuma lei aprovada ainda.</p>";
+    }
+</script>
 </body>
 </html>
+    
