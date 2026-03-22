@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cybercracy CORE - OXE</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        body { background: #000; color: #00ff41; font-family: monospace; padding: 20px; }
+        #term { border: 1px solid #00ff41; height: 90vh; overflow-y: auto; padding: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h3>[CORE SERVER ONLINE] - ID: CYBER_HUB_GLOBAL</h3>
+    <div id="term">>> Inicializando persistência...</div>
+    <script>
+        const peer = new Peer("CYBER_HUB_GLOBAL");
+        let db = JSON.parse(localStorage.getItem('cyber_p2p_v9')) || { chat: [], urna: [], livro: [], bans: [] };
+        let conns = [];
+
+        peer.on('connection', c => {
+            conns.push(c);
+            document.getElementById('term').innerHTML += `<div>[${new Date().toLocaleTimeString()}] NOVO NÓ CONECTADO: ${c.peer}</div>`;
+            
+            c.on('open', () => c.send({ tipo: 'SYNC', data: db }));
+            
+            c.on('data', data => {
+                if(db.bans.includes(data.sender)) return;
+
+                if(data.tipo === 'CHAT') db.chat.push(p=data);
+                if(data.tipo === 'PL') db.urna.push(data.pl);
+                if(data.tipo === 'ADM_VETO') {
+                    db.urna = db.urna.filter(x => x.id !== data.id);
+                }
+                if(data.tipo === 'ADM_APROVAR') {
+                    let pl = db.urna.find(x => x.id === data.id);
+                    if(pl) { pl.status = 'LIVRO'; db.livro.push(pl); db.urna = db.urna.filter(x => x.id !== data.id); }
+                }
+                if(data.tipo === 'ADM_BAN') db.bans.push(data.target);
+
+                localStorage.setItem('cyber_p2p_v9', JSON.stringify(db));
+                conns.forEach(conn => { if(conn.open) conn.send({ tipo: 'SYNC', data: db, last: data }); });
+            });
+        });
+    </script>
+</body>
+</html>
